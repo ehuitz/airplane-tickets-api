@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AirlineController;
+use App\Http\Controllers\Api\FlightController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('airlines', AirlineController::class)->middleware('auth:sanctum');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('airlines', AirlineController::class);
+    Route::apiResource('flights', FlightController::class);
+ 
+
+});
