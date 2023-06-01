@@ -88,6 +88,7 @@ For support, email elmohuitz@gmail.com and I wll gladly assist with any question
 It uses Sanctum for API, and it stores the bearer token in storage/logs/larave.log
 Here is a list of API routes
 
+```bash
 GET|HEAD        api/airlines ....................................................... airlines.index › Api\AirlineController@index
   POST            api/airlines ....................................................... airlines.store › Api\AirlineController@store
   GET|HEAD        api/airlines/{airline} ............................................... airlines.show › Api\AirlineController@show
@@ -103,17 +104,21 @@ GET|HEAD        api/airlines ...................................................
   GET|HEAD        api/tickets/{ticket} ................................................... tickets.show › Api\TicketController@show
   PUT|PATCH       api/tickets/{ticket} ............................................... tickets.update › Api\TicketController@update
   DELETE          api/tickets/{ticket} ............................................. tickets.destroy › Api\TicketController@destroy
-
+```
 For Tickets Create
+```bash
     'flight_id' => 'required|exists:flights,id',
     'holder_name' => 'required',
     'passport_number' => 'required'
+```
 
 For Tickets Update
+```bash
     'flight_id' => 'nullable|exists:flights,id',
     'holder_name' => 'nullable',
     'passport_number' => 'nullable',
     'update_seat' => 'required|boolean'
+```
 
 In the seeder there have been added (4) Airlines, (1) Flight, (1) Ticket
 
