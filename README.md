@@ -1,3 +1,133 @@
+# airplane-tickets-api
+
+The goal of this assignment is to create a minimal airplane ticket reservation system as an API. You are free to change / improve features, as well as implement more features you feel should benefit the system.
+
+## Task
+Implement a minimal and useful API for an airplane ticket management system. This management system is a service used by 3rd party systems.
+
+One airplane ticket should contain flight departure time, source and destination airport as well as passenger seat which should be a random number (between 1 and 32) per flight and passenger's passport ID.
+
+The API should support following operations:
+
+- Create new Ticket
+- Cancel Ticket
+- Bonus task: ability to change seat for a given ticket
+
+## Requirements
+This project was developed using the TALL Stack
+Tailwind, Alpine.js, Laravel, Livewire.
+
+Additionally, it was developer on WSL using Docker, Composer and npm
+
+
+
+## Run Locally
+
+Clone the project
+
+```bash
+git clone https://link-to-project
+```
+Go to the project directory
+```bash
+cd my-project
+```
+Install Composer
+```bash
+composer install
+```
+Install dependencies
+```bash
+npm install
+```
+Copy environment from example
+```bash
+cp .env.example .env
+```
+Run Laravel Sail
+```bash
+./vendor/bin/sail up
+```
+This will take sometime, but after configure the alias for sail
+```bash
+sudo nano ~/.bashrc
+```
+Then enter the following under the alias section
+```bash
+alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+```
+You will be able to run instead
+```bash
+sail up
+```
+Now, generate app key
+```bash
+sail artisan key:generate
+```
+Then, run migration
+```bash
+sail artisan migrate
+```
+Then, run seed
+```bash
+sail db:seed
+```
+Lastly, run dev
+```bash
+npm run dev
+```
+You can now go to 
+```bash
+http://localhost/
+```
+After Succesful set up you can log in with 'admin@admin.com password'
+
+For support, email elmohuitz@gmail.com and I wll gladly assist with any questions. 
+
+## API
+It uses Sanctum for API, and it stores the bearer token in storage/logs/larave.log
+Here is a list of API routes
+
+GET|HEAD        api/airlines ....................................................... airlines.index › Api\AirlineController@index
+  POST            api/airlines ....................................................... airlines.store › Api\AirlineController@store
+  GET|HEAD        api/airlines/{airline} ............................................... airlines.show › Api\AirlineController@show
+  PUT|PATCH       api/airlines/{airline} ........................................... airlines.update › Api\AirlineController@update
+  DELETE          api/airlines/{airline} ......................................... airlines.destroy › Api\AirlineController@destroy
+  GET|HEAD        api/flights .......................................................... flights.index › Api\FlightController@index
+  POST            api/flights .......................................................... flights.store › Api\FlightController@store
+  GET|HEAD        api/flights/{flight} ................................................... flights.show › Api\FlightController@show
+  PUT|PATCH       api/flights/{flight} ............................................... flights.update › Api\FlightController@update
+  DELETE          api/flights/{flight} ............................................. flights.destroy › Api\FlightController@destroy
+  GET|HEAD        api/tickets .......................................................... tickets.index › Api\TicketController@index
+  POST            api/tickets .......................................................... tickets.store › Api\TicketController@store
+  GET|HEAD        api/tickets/{ticket} ................................................... tickets.show › Api\TicketController@show
+  PUT|PATCH       api/tickets/{ticket} ............................................... tickets.update › Api\TicketController@update
+  DELETE          api/tickets/{ticket} ............................................. tickets.destroy › Api\TicketController@destroy
+
+For Tickets Create
+    'flight_id' => 'required|exists:flights,id',
+    'holder_name' => 'required',
+    'passport_number' => 'required'
+
+For Tickets Update
+    'flight_id' => 'nullable|exists:flights,id',
+    'holder_name' => 'nullable',
+    'passport_number' => 'nullable',
+    'update_seat' => 'required|boolean'
+
+In the seeder there have been added (4) Airlines, (1) Flight, (1) Ticket
+
+## Future
+
+Some future upgrades to this project are:
+1. add validation for flights to be in the future, as for now it allows any date
+2. add an interface to view data
+3. fix to more objective code
+4. be able to view a list of available seats and/or choose custom seat.
+5. add token abilities to make it available to admin, airlines, third party agents.
+6. show token in user profile
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
