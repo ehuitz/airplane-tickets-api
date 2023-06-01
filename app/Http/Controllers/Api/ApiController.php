@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Ticket;
 
 class ApiController extends Controller
 {
@@ -44,5 +45,22 @@ class ApiController extends Controller
 
 
         return response()->json($response, $code);
+    }
+
+
+    public function generateSeatNumber($flightId)
+    {
+        // Get all the used seat numbers for the given flight
+    $usedSeatNumbers = Ticket::where('flight_id', $flightId)->pluck('seat')->toArray();
+
+    // Generate a random seat number between 1 and 32 that has not been used
+    $availableSeatNumbers = array_diff(range(1, 32), $usedSeatNumbers);
+    
+    if (empty($availableSeatNumbers)) {
+       return 0;
+    }
+    $randomSeatNumber = array_rand($availableSeatNumbers);
+
+    return $availableSeatNumbers[$randomSeatNumber];
     }
 }

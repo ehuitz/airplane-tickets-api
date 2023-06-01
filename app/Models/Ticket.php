@@ -5,24 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Airline;
-use App\Models\Ticket;
+use App\Models\Flight;
 
-
-
-
-class Flight extends Model
+class Ticket extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-
-
-    public function airline(){
-        return $this->belongsTo(Airline::class);
-    }
-
-    public function tickets(){
-        return $this->hasMany(Ticket::class);
+   
+    public function flight(){
+        return $this->belongsTo(Flight::class);
     }
 }

@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AirlineController;
 use App\Http\Controllers\Api\FlightController;
+use App\Http\Controllers\Api\TicketController;
+
 
 
 /*
@@ -26,6 +28,7 @@ Route::apiResource('airlines', AirlineController::class)->middleware('auth:sanct
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('airlines', AirlineController::class);
     Route::apiResource('flights', FlightController::class);
+    Route::apiResource('tickets', TicketController::class);
  
 
 });

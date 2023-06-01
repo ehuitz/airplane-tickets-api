@@ -36,5 +36,19 @@ class DatabaseSeeder extends Seeder
         $airline4 =  \App\Models\Airline::create([
             'name' => 'Delta',
         ]);
+
+        $flight1 = \App\Models\Flight::create([
+            'airline_id' => $airline1->id,
+            'source' => 'BZ',
+            'destination' => 'FRA',
+            'departure_time'  => '2023-02-02 00:00:01'
+        ]);
+
+        $ticket1 = \App\Models\Ticket::create([
+            'flight_id' => $flight1->id,
+            'holder_name' => 'Elmer Huitz',
+            'passport_number' => '123123123',
+            'seat'  => 7
+        ]);
     }
 }
