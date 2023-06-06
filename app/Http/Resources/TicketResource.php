@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Ticket;
 use App\Models\Flight;
 use App\Http\Resources\FlightResource;
+use App\Http\Resources\AirlineResource;
+
  
 
 class TicketResource extends JsonResource
@@ -18,12 +20,18 @@ class TicketResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $flight = $this->whenLoaded('flight');
+        $airline = $this->whenLoaded('airline');
+
+
         return [
             'id' => $this->id,
             'holder_name' => $this->holder_name,
             'passport_number' => $this->passport_number,
             'seat' => $this->seat,
-            'flight' => new FlightResource($this->flight),
+            'flight' => new FlightResource($flight),
+            'airline' => new AirlineResource($airline),
         ];
     }
 }

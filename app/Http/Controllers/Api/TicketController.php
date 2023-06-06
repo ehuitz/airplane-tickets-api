@@ -16,7 +16,7 @@ class TicketController extends ApiController
      */
     public function index()
     {
-        $tickets = Ticket::all();
+        $tickets = Ticket::with(['flight', 'airline'])->get();
         return $this->sendResponse(TicketResource::collection($tickets), 'Tickets retrieved successfully.');
     }
 
@@ -69,7 +69,7 @@ class TicketController extends ApiController
      */
     public function show(string $id)
     {
-        $ticket = Ticket::find($id);
+        $ticket = Ticket::with(['flight', 'airline'])->find($id);
 
         if (is_null($ticket)) {
             return $this->sendError('Flight not found.');

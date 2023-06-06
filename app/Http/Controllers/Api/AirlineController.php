@@ -18,7 +18,7 @@ class AirlineController extends ApiController
      */
     public function index()
     {
-        $airlines = Airline::all();
+        $airlines = Airline::with(['flights', 'tickets'])->get();
         return $this->sendResponse(AirlineResource::collection($airlines), 'Airlines retrieved successfully.');
     }
 
@@ -51,7 +51,7 @@ class AirlineController extends ApiController
      */
     public function show(string $id)
     {
-        $airline = Airline::find($id);
+        $airline = Airline::with(['flights', 'tickets'])->find($id);
 
         if (is_null($airline)) {
             return $this->sendError('Airline not found.');

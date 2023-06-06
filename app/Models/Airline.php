@@ -19,4 +19,10 @@ class Airline extends Model
 
         return $this->hasMany(Flight::class);
     }
+
+   
+    public function tickets()
+    {
+        return $this->hasManyThrough(Ticket::class, Flight::class);
+    }
 }
