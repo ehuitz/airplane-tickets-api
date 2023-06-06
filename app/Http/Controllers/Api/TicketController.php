@@ -27,21 +27,21 @@ class TicketController extends ApiController
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'flight_id' => 'required|exists:flights,id',
             'holder_name' => 'required',
             'passport_number' => 'required'
         ]);
 
-      
-   
+
+
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
-       
-      
+
+
 
         try {
             $seat_number = $this->generateSeatNumber($input['flight_id']);
@@ -58,7 +58,7 @@ class TicketController extends ApiController
             $ticket->save();
 
         } catch (Exception $e) {
-              
+
             return $this->sendError('Error Creating Ticket Record.');
         }
         return $this->sendResponse(new TicketResource($ticket), 'Ticket created successfully.');
@@ -69,13 +69,13 @@ class TicketController extends ApiController
      */
     public function show(string $id)
     {
-        $ticket = Ticket::with(['flight', 'airline'])->find($id);
+        $ticket = Ticket::find($id);
 
         if (is_null($ticket)) {
             return $this->sendError('Flight not found.');
         }
 
-        return $this->sendResponse(new TicketResource($ticket), 'Ticket retrieved successfully.');
+        return $this->sendResponse(new TicketResource($ticket->loadMissing(['flight', 'airline'])), 'Ticket retrieved successfully.');
     }
 
 
@@ -85,7 +85,7 @@ class TicketController extends ApiController
     public function update(Request $request, Ticket $ticket)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'flight_id' => 'nullable|exists:flights,id',
             'holder_name' => 'nullable',
@@ -94,19 +94,19 @@ class TicketController extends ApiController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
-      
+
 
         if($input['update_seat'])
         {
             try {
                 $ticket->seat = null;
                 $ticket->save();
-            
+
                 } catch (Exception $e) {
-                      
+
                     return $this->sendError('Error Updating Ticket Record.');
                 }
 
@@ -117,9 +117,9 @@ class TicketController extends ApiController
                 return $this->sendError('There are no more available seat in this flight.');
             }
         }
-       
-        
-        
+
+
+
         if($input['flight_id']){
             $ticket->flight_id = $input['flight_id'];
         }
@@ -129,15 +129,15 @@ class TicketController extends ApiController
         if($input['passport_number']){
             $ticket->passport_number = $input['passport_number'];
         }
-        
+
         try {
             $ticket->save();
-      
+
         } catch (Exception $e) {
-              
+
         return $this->sendError('Error Updating Ticket Record.');
     }
-   
+
         return $this->sendResponse(new TicketResource($ticket), 'Ticket updated successfully.');
     }
 
@@ -147,7 +147,7 @@ class TicketController extends ApiController
     public function destroy(Ticket $ticket)
     {
         $ticket->delete();
-   
+
         return $this->sendResponse([], 'Ticket deleted successfully.');
     }
 }

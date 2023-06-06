@@ -28,19 +28,19 @@ class AirlineController extends ApiController
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'name' => 'required|unique:airlines',
         ]);
-   
+
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors());
         }
 
         try {
             $airline = Airline::create($input);
         } catch (Exception $e) {
-              
+
             return $this->sendError('Error Creating Airline Record.');
         }
         return $this->sendResponse(new AirlineResource($airline), 'Airline created successfully.');
@@ -51,13 +51,13 @@ class AirlineController extends ApiController
      */
     public function show(string $id)
     {
-        $airline = Airline::with(['flights', 'tickets'])->find($id);
+        $airline = Airline::find($id);
 
         if (is_null($airline)) {
             return $this->sendError('Airline not found.');
         }
 
-        return $this->sendResponse(new AirlineResource($airline), 'Airline retrieved successfully.');
+        return $this->sendResponse(new AirlineResource($airline->loadMissing(['flights', 'tickets'])), 'Airline retrieved successfully.');
     }
 
     /**
@@ -66,18 +66,18 @@ class AirlineController extends ApiController
     public function update(Request $request, Airline $airline)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'name' => 'required',
         ]);
-   
+
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-        
+
         $airline->name = $input['name'];
         $airline->save();
-   
+
         return $this->sendResponse(new AirlineResource($airline), 'Airline updated successfully.');
     }
 
@@ -87,7 +87,7 @@ class AirlineController extends ApiController
     public function destroy(Airline $airline)
     {
         $airline->delete();
-   
+
         return $this->sendResponse([], 'Airline deleted successfully.');
     }
 }
