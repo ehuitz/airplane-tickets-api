@@ -9,10 +9,20 @@ use App\Models\Flight;
 use Validator;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
+use App\Services\Flight\FlightService;
+
 
 
 class FlightController extends ApiController
 {
+
+    protected $flightService;
+
+    public function __construct(FlightService $flightService)
+    {
+        $this->flightService = $flightService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,11 +32,10 @@ class FlightController extends ApiController
 
         if ($request->has('departure_date')) {
             $departureDate = $request->input('departure_date');
-            $departureDate = Carbon::createFromFormat('Y-m-d', $departureDate)->startOfDay();
-            $query->whereDate('departure_time', $departureDate);
+            $flights = $this->flightService->getFlightsByDepartureDate($departureDate);
+        } else {
+            $flights = Flight::with(['airline', 'tickets'])->get();
         }
-
-        $flights=$query->get();
 
         if ($flights->isEmpty()) {
             return $this->sendError('No flights found for the specified date.');
