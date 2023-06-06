@@ -8,15 +8,30 @@ use App\Http\Resources\FlightResource;
 use App\Models\Flight;
 use Validator;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
+
 
 class FlightController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $flights = Flight::with(['airline', 'tickets'])->get();
+        $query = Flight::with(['airline', 'tickets']);
+
+        if ($request->has('departure_date')) {
+            $departureDate = $request->input('departure_date');
+            $departureDate = Carbon::createFromFormat('Y-m-d', $departureDate)->startOfDay();
+            $query->whereDate('departure_time', $departureDate);
+        }
+
+        $flights=$query->get();
+
+        if ($flights->isEmpty()) {
+            return $this->sendError('No flights found for the specified date.');
+        }
+
         return $this->sendResponse(FlightResource::collection($flights), 'Flights retrieved successfully.');
     }
 
